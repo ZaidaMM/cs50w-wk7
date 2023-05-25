@@ -1,0 +1,40 @@
+{% extends "network/layout.html" %} {% block body %}
+<div class="container">
+  <h2>All Posts</h2>
+  {% if user.is_authenticated %}
+  <div class="card mb-4">
+    <form
+      action="{% url 'compose' %}"
+      method="post"
+      class="d-flex flex-column p-3"
+      id="compose-form"
+    >
+      {% csrf_token %}
+      <div class="form-group d-flex flex-column">
+        <label for="compose-body"><strong>New Post</strong></label>
+        <textarea
+          name="compose-body"
+          id="compose-body"
+          cols="30"
+          rows="3"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <input type="submit" value="Post" class="btn btn-primary" />
+      </div>
+    </form>
+  </div>
+  {% endif %}
+
+  <div id="all-posts">
+    {% for post in posts %}
+    <div class="card mb-2 p-3">
+      <h3>{{ post.author }}</h3>
+      <p><i class="lh-1"></i>{{ post.body }}</p>
+      <p class="text-secondary lh-1">{{ post.timestamp }}</p>
+      <p>Likes: 0 (TODO)</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
