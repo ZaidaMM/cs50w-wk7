@@ -1,11 +1,32 @@
 {% extends "network/layout.html" %} {% block body %}
 <div class="container">
-  <h2>{{ username }}</h2>
-
+  <h2>{{ username}}</h2>
+  <div class=" d-flex align-items-baseline justify-content-between">
+    <p class="text-secondary small">
+      <strong>{{ followers.count }}</strong> Followers - <strong>{{ following.count }}</strong> Following      
+    </p>
+    {% if user.is_authenticated %}  {% if user != profile_owner %} {{""}}{% if isFollowing %}
+    <form action="{% url 'unfollow' %}" method="post"> 
+      {% csrf_token %}
+      <input type="hidden" name="followerUser" value="{{ profile_owner }}">
+      <input type="submit" class="btn btn-danger btn-sm" value="Unfollow"></input>
+    </form>
+    {% else %}
+     <form action="{% url 'follow' %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="followerUser" value="{{ profile_owner }}">
+      <input type="submit" class="btn btn-primary btn-sm" value="Follow"></input>
+    </form>
+    {% endif %} {% endif %} {% endif %}
+  </div>
   <div id="all-posts">
     {% for post in page_obj %}
     <div class="card mb-2 p-3">
-      <h3>{{ post.author }}</h3>
+      <h3>
+        <a href="{% url 'profile' user_id=profile_owner.id %}"
+          >{{ post.author }}</a
+        >
+      </h3>
       <p><i class="lh-1"></i>{{ post.body }}</p>
       <p class="text-secondary lh-1">{{ post.timestamp }}</p>
       <p>Likes: 0 (TODO)</p>
